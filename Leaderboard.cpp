@@ -5,6 +5,30 @@ Leaderboard::~Leaderboard() { clear(); }
 
 void Leaderboard::insertSorted(Snake *s)
 {
+    RankNode* newNode = new RankNode(s);
+
+    if(head == nullptr){
+        head = newNode;
+        size++;
+        return;
+    }
+    if(s->getScore() > head->snake->getScore() || 
+    (s->getScore() == head->snake->getScore() && s->getId() < head->snake->getId())){
+        newNode->next = head;
+        head = newNode;
+        size++;
+        return;
+    }
+
+    RankNode* current = head;
+
+    while (current->next != nullptr && (current->next->snake->getScore() > s->getScore() ||
+           current->next->snake->getId() < s->getId())) {
+        current = current->next;
+    }
+    newNode->next = current->next;
+    current->next = newNode;
+    size++;
     // TODO: Insert s so the list stays sorted:
     //   1) higher score first
     //   2) equal scores -> smaller id first ('A' before 'B')
@@ -12,19 +36,52 @@ void Leaderboard::insertSorted(Snake *s)
 
 bool Leaderboard::remove(Snake *s)
 {
+    if (head == nullptr){
+        return false;
+    }
+    
+    if (head->snake == s){
+        RankNode* temp = head;
+        head = temp->next;
+        delete temp;
+        size--;
+        return true;
+    }
+
+    RankNode* current = head;
+    while (current->next != nullptr && current->next->snake != s){
+        current = current->next;
+    }
+    if(current->next != nullptr){
+        RankNode* temp = current->next;
+        current->next = temp->next;
+        delete temp;
+        size--;
+        return true;
+    }
     // TODO: Find the node whose snake == s, unlink and delete the NODE.
     // Do NOT delete the snake itself; the Arena owns the snakes.
     // Return false if not found.
-    return false;
 }
 
 void Leaderboard::reposition(Snake *s)
 {
+    remove(s);
+    insertSorted(s);
     // TODO: Called after s's score changed. Put s back at its correct place.
 }
 
 void Leaderboard::clear()
-{
+{   
+    if(head == nullptr){
+        return;
+    }
+    for (int i = 0; i < size; i++){
+        RankNode* temp = head;
+        head = head->next;
+        delete temp;
+    }
+    size = 0;
     // TODO: Delete all RankNodes (not the snakes).
 }
 

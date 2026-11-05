@@ -36,7 +36,12 @@ SnakeBody &SnakeBody::operator=(SnakeBody &&other) noexcept
 bool SnakeBody::isEmpty() const
 {
     // TODO: true if the body has no segments.
-    return true;
+    if (length == 0){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
 void SnakeBody::pushFront(int row, int col)
