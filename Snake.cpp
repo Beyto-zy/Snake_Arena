@@ -5,6 +5,7 @@ Snake::Snake(char _id, Direction _direction)
 
 bool Snake::turn(Direction newDir)
 {
+    
     // TODO: The second segment is the "neck". If moving one cell in newDir would put
     // the head onto the neck, return false and change nothing. Otherwise set the
     // direction and return true. (Length 1: no neck, every turn is valid.)
