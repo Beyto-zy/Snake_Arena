@@ -136,7 +136,38 @@ Segment *SnakeBody::findAt(int row, int col) const
 SnakeBody SnakeBody::splitAt(int row, int col)
 {
     SnakeBody cut; // returned by value -> moved, not copied
+    Segment* target = findAt(row,col);
 
+    if(target == nullptr){
+        return cut;
+    }
+
+    if(target == head){
+        cut.head = head;
+        cut.tail = tail;
+        cut.length = length;
+        head = nullptr;
+        tail = nullptr;
+        length = 0;
+    }
+
+    if (target != head){
+        Segment* prevSeg = target->prev;
+        prevSeg->next = nullptr;
+        target->prev = nullptr;
+        cut.head = target;
+        cut.tail = this->tail;
+        this->tail = prevSeg;
+
+        int counter = 0;
+        Segment* current = cut.head;
+        while(current != nullptr) {
+            counter++;
+            current = current->next;
+        }
+        cut.length = counter;
+        length = length - counter;
+    }
     // TODO: The segment at (row,col) and every segment after it (towards the tail)
     // are moved into 'cut'; this body keeps the segments before it.
     // If there is no segment at (row,col), return an empty body.
