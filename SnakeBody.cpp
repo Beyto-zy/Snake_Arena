@@ -156,7 +156,7 @@ SnakeBody SnakeBody::splitAt(int row, int col)
         length = 0;
     }
 
-    if (target != head){
+    else{
         Segment* prevSeg = target->prev;
         prevSeg->next = nullptr;
         target->prev = nullptr;
